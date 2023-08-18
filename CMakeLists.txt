@@ -37,13 +37,13 @@
 # of things you should do.
 #
 # 1. You should copy the contents of the SDK to a place of your choice.
-# 
+#
 # 2. You can remove any sample's directory you don't wish to build.  Be careful about
 #    the following directories.
 #
 #    a. CMake - contains helper scripts that make this all work.  You should keep this.
 #
-#    b. sutil and putil 
+#    b. sutil and putil
 #              - Almost all of the samples make use of this shared code one way or another, so
 #               you should probably keep them until you have your own frameowrk for your
 #               code.
@@ -60,7 +60,7 @@
 #
 # 1. Setup the project and other global settings.  This involves processing some helper
 #    scripts.
-# 
+#
 # 2. Look for external dependencies, such as glut, DirectX, CUDA, and OptiX.
 #
 # 3. Process all the subdirectories' CMakeLists.txt files.  These files create all the
@@ -92,7 +92,7 @@ cmake_policy(VERSION 2.6)
 
 if( POLICY CMP0072 )
   # FindOpenGL prefers GLVND by default when available
-  cmake_policy(SET CMP0072 NEW) 
+  cmake_policy(SET CMP0072 NEW)
 endif()
 
 # Add paths to our CMake code to the module path, so they can be found automatically by
@@ -299,7 +299,7 @@ function(OPTIX_add_sample_executable target_name)
   CUDA_GET_SOURCES_AND_OPTIONS(source_files cmake_options options ${ARGN})
 
   if (CUDA_NVRTC_ENABLED)
-  
+
     # Isolate OBJ target files. NVCC should only process these files and leave PTX targets for NVRTC
     set(cu_obj_source_files)
     foreach(file ${source_files})
@@ -312,11 +312,11 @@ function(OPTIX_add_sample_executable target_name)
     # Create the rules to build the OBJ from the CUDA files.
     CUDA_WRAP_SRCS( ${target_name} OBJ generated_files ${cu_obj_source_files} ${cmake_options} OPTIONS ${options} )
   else()
-  
+
     # Create the rules to build the PTX and OBJ from the CUDA files.
     CUDA_WRAP_SRCS( ${target_name} PTX generated_files ${source_files} ${cmake_options} OPTIONS ${options} )
   endif()
-  
+
 
   # Here is where we create the rule to make the executable.  We define a target name and
   # list all the source files used to create the target.  In addition we also pass along
@@ -344,6 +344,9 @@ function(OPTIX_add_sample_executable target_name)
     target_link_libraries( ${target_name} m ) # Explicitly link against math library (C samples don't do that by default)
   endif()
 endfunction()
+
+# NOTE: C++17にする
+set(CMAKE_CXX_STANDARD 17)
 
 #########################################################
 #  List of samples found in subdirectories.
@@ -378,6 +381,7 @@ add_subdirectory(optixSpherePP)
 add_subdirectory(optixTextureSampler)
 add_subdirectory(optixTutorial)
 add_subdirectory(optixWhitted)
+add_subdirectory(redflash)
 add_subdirectory(primeInstancing)
 add_subdirectory(primeMasking)
 add_subdirectory(primeMultiBuffering)
@@ -409,7 +413,7 @@ if(WIN32)
         #message("${CMAKE_COMMAND} -E copy_if_different ${lib} ${path}/${name}")
         execute_process(COMMAND ${CMAKE_COMMAND} -E copy_if_different ${lib} ${path}/${name})
       endfunction()
-      
+
       # Copy the binary directory into the build directory
       file(GLOB dlls "${OptiX_INSTALL_DIR}/bin${bit_dest}/*.dll")
       foreach(file ${dlls})
