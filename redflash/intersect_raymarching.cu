@@ -254,6 +254,64 @@ RT_PROGRAM void intersect(int primIdx)
     }
 }
 
+float calcSlope(float t0, float t1, float r0, float r1)
+{
+    return (r1 - r0) / max(t1 - t0, 1e-5);
+}
+
+RT_PROGRAM void intersect_AutoRelaxation(int primIdx)
+{
+    float t = ray.tmin;
+
+    if (current_prd.depth == 0)
+    {
+        t = max(current_prd.distance, t);
+    }
+
+    float eps = scene_epsilon * t;
+    float r = map(ray.origin + t * ray.direction);
+    int i = 1;
+    float z = r;
+    float m = -1;
+    float stepRelaxation = 0.2;
+
+    while (t + r < ray.tmax          // miss
+        && r > eps    // hit
+        && i < 300)  // didn't converge
+    {
+        float T = t + z;
+        float R = map(ray.origin + T * ray.direction);
+        bool doBackStep = z > abs(R) + r;
+        //bool doBackStep = t + abs(r) < T - abs(R);
+        float M = calcSlope(t, T, r, R);
+        m = doBackStep ? -1 : lerp(m, M, stepRelaxation);
+        t = doBackStep ? t : T;
+        r = doBackStep ? r : R;
+        float omega = max(1.0, 2.0 / (1.0 - m));
+        eps = scene_epsilon * t;
+        z = max(eps, r * omega);
+        ++i;
+#ifdef ENABLE_DEBUG_UTILS
+        // backStep += doBackStep ? 1 : 0;
+#endif
+    }
+
+#ifdef ENABLE_DEBUG_UTILS
+    // stepCount = i;
+#endif
+
+    float retT = t + r;
+    //retT = min(retT, ray.tmax);
+
+    if (retT < ray.tmax && rtPotentialIntersection(retT))
+    {
+        float3 p = ray.origin + retT * ray.direction;
+        shading_normal = geometric_normal = calcNormal(p, map, scene_epsilon);
+        texcoord = make_float3(p.x, p.y, 0);
+        rtReportIntersection(0);
+    }
+}
+
 RT_PROGRAM void bounds(int, float result[6])
 {
     optix::Aabb* aabb = (optix::Aabb*)result;
