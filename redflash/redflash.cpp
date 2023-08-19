@@ -1630,7 +1630,8 @@ int main(int argc, char** argv)
     bool use_time_limit = false;
 
     // 動画の連番画像用
-    float movie_time = -1.0f;
+    float movie_time_start = -1.0f;
+    float movie_time_end = -1.0f;
     float movie_fps = -1.0f;
 
     for (int i = 1; i < argc; ++i)
@@ -1806,14 +1807,15 @@ int main(int argc, char** argv)
         {
             flag_debug = true;
         }
-        else if (arg == "--movie_time")
+        else if (arg == "--movie_time_range")
         {
-            if (i == argc - 1)
+            if (i == argc - 2)
             {
-                std::cerr << "Option '" << argv[i] << "' requires additional argument.\n";
+                std::cerr << "Option '" << argv[i] << "' requires additional 2 arguments.\n";
                 printUsageAndExit(argv[0]);
             }
-            movie_time = atof(argv[++i]);
+            movie_time_start = atof(argv[++i]);
+            movie_time_end = atof(argv[++i]);
         }
         else if (arg == "--movie_fps")
         {
@@ -1866,7 +1868,7 @@ int main(int argc, char** argv)
         context->validate();
 
         // 動画の画像連番書き出しモード
-        if (movie_fps > 0.0f && movie_time > 0.0f)
+        if (movie_fps > 0.0f && movie_time_start >= 0.0f && movie_time_end >= 0.0f)
         {
             setupPostprocessing();
             Variable(denoiserStage->queryVariable("blend"))->setFloat(denoiseBlend);
@@ -1884,10 +1886,12 @@ int main(int argc, char** argv)
                 normalBuffer->set(getNormalBuffer());
             }
 
-            int frame_count = movie_fps * movie_time;
+            int frame_start = movie_time_start * movie_fps;
+            int frame_count = movie_fps * (movie_time_end - movie_time_start);
 
             // print config
-            std::cout << "[info] frame_count: " << frame_count << " (fps: " << movie_fps << " x time: " << movie_time << " sec.)" << std::endl;
+            std::cout << "[info] time_range: " << "start: " << movie_time_start << "\tend: " << movie_time_end << std::endl;
+            std::cout << "[info] frame_count: " << frame_count << " (fps: " << movie_fps << " x time length: " << (movie_time_end - movie_time_start) << " sec.)" << std::endl;
             std::cout << "[info] resolution: " << width << "x" << height << " px" << std::endl;
             std::cout << "[info] time_limit: " << time_limit << " sec." << std::endl;
             std::cout << "[info] init_sample_per_launch: " << init_sample_per_launch << std::endl;
@@ -1899,7 +1903,7 @@ int main(int argc, char** argv)
             // 画像の非同期保存のためのバッファ
             std::vector<unsigned char> pix(width * height * 3);
 
-            for (int frame = 0; frame < frame_count; ++frame)
+            for (int frame = frame_start; frame < frame_start + frame_count; ++frame)
             {
                 float movie_time = frame / movie_fps;
 
@@ -1912,7 +1916,7 @@ int main(int argc, char** argv)
                 sample_per_launch = init_sample_per_launch;
 
                 double global_remain_time = time_limit - (frame_start_time - launch_time);
-                int rest_frame = frame_count - frame;
+                int rest_frame = frame_count + frame_start - frame;
                 double frame_time_limit = global_remain_time / rest_frame;
 
                 updateFrame(movie_time);
@@ -1929,7 +1933,7 @@ int main(int argc, char** argv)
                     double remain_time = frame_time_limit - used_time;
                     last_time = now;
 
-                    std::cout << "[info] frame:" << frame << "/" << frame_count << "(" << ((double)(frame + 1) / frame_count * 100) << "%)\tframe:" << i
+                    std::cout << "[info] frame_global: " << frame << "\tframe_local:" << (frame - frame_start) << " / " << frame_count << "(" << ((double)(frame + 1 - frame_start) / frame_count * 100) << "%)\tlaunch : " << i
                         << "\tused_time:" << (now - launch_time) << "/" << time_limit << "(" << ((double)(now - launch_time) / time_limit * 100) << "%)" << std::endl;
 
                     // 1回目の結果から、時間切れしない sample_per_launch を決定する
