@@ -55,31 +55,31 @@ const char* const SAMPLE_NAME = "redflash";
 
 Context context = 0;
 
-// ‹N“®ƒIƒvƒVƒ‡ƒ“‚Åİ’è‚·‚éƒpƒ‰ƒ[ƒ^[
+// èµ·å‹•ã‚ªãƒ—ã‚·ãƒ§ãƒ³ã§è¨­å®šã™ã‚‹ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ãƒ¼
 int width = 1920 / 2;
 int height = 1080 / 2;
 bool use_pbo = true;
 bool flag_debug = false;
 
-// “®‰æƒ‚[ƒh‚Ì‰‰ñƒtƒŒ[ƒ€iƒxƒ“ƒ`ƒ}[ƒNj‚Ìsample_per_launch
+// å‹•ç”»ãƒ¢ãƒ¼ãƒ‰æ™‚ã®åˆå›ãƒ•ãƒ¬ãƒ¼ãƒ ï¼ˆãƒ™ãƒ³ãƒãƒãƒ¼ã‚¯æ™‚ï¼‰ã®sample_per_launch
 int init_sample_per_launch = 3;
 
-// Ã~‰æƒ‚[ƒh—p‚Ìƒpƒ‰ƒ[ƒ^[
+// é™æ­¢ç”»ãƒ¢ãƒ¼ãƒ‰ç”¨ã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ãƒ¼
 bool auto_set_sample_per_launch = false;
 double auto_set_sample_per_launch_scale = 0.95;
 double last_frame_scale = 1.7;
 
-// ƒ‰ƒ“ƒ^ƒCƒ€‚É•Ï‰»‚·‚éƒpƒ‰ƒ[ƒ^[
+// ãƒ©ãƒ³ã‚¿ã‚¤ãƒ ã«å¤‰åŒ–ã™ã‚‹ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ãƒ¼
 bool flag_debug_render = false;
 
-// ŠÔ
+// æ™‚é–“
 double launch_time;
 double animate_begin_time;
 double animate_time = 0.0f;
 
 // sampling
 int max_depth = 1;
-int rr_begin_depth = 1;// ƒƒVƒAƒ“ƒ‹[ƒŒƒbƒgŠJn‚Ìdepthi–¢g—pj
+int rr_begin_depth = 1;// ãƒ­ã‚·ã‚¢ãƒ³ãƒ«ãƒ¼ãƒ¬ãƒƒãƒˆé–‹å§‹ã®depthï¼ˆæœªä½¿ç”¨ï¼‰
 int sample_per_launch = 1;
 int frame_number = 1;
 int total_sample = 0;
@@ -118,7 +118,7 @@ Buffer trainingDataBuffer;
 // Rendering
 float tonemap_exposure = 2.5f;
 
-// Postprocessing‚ÌTonemap‚ğ—LŒø‚É‚·‚é‚©‚Ç‚¤‚©
+// Postprocessingã®Tonemapã‚’æœ‰åŠ¹ã«ã™ã‚‹ã‹ã©ã†ã‹
 bool use_post_tonemap = false;
 
 bool denoiser_perf_mode = false;
@@ -174,13 +174,13 @@ int            mouse_button;
 
 // Scene
 
-// Light‚ğ“®“I‚ÉƒAƒbƒvƒf[ƒg‚·‚é‚½‚ß‚ÌQÆ
+// Lightã‚’å‹•çš„ã«ã‚¢ãƒƒãƒ—ãƒ‡ãƒ¼ãƒˆã™ã‚‹ãŸã‚ã®å‚ç…§
 std::vector<LightParameter> light_parameters;
 std::vector<GeometryInstance> light_gis;
 GeometryGroup light_group;
 Group top_group_light;
 
-// WASDˆÚ“®
+// WASDç§»å‹•
 bool is_key_W_pressed = false;
 bool is_key_A_pressed = false;
 bool is_key_S_pressed = false;
@@ -191,7 +191,7 @@ bool is_key_E_pressed = false;
 
 //------------------------------------------------------------------------------
 //
-// Forward decls 
+// Forward decls
 //
 //------------------------------------------------------------------------------
 
@@ -380,13 +380,13 @@ GeometryInstance createMesh(
     mesh.use_tri_api = true;
     mesh.ignore_mats = false;
 
-    // NOTE: registerMaterial ‚Åã‘‚«‚·‚é‚Ì‚ÅA‚±‚Ìw’è‚ÍˆÓ–¡‚ª‚È‚¢
+    // NOTE: registerMaterial ã§ä¸Šæ›¸ãã™ã‚‹ã®ã§ã€ã“ã®æŒ‡å®šã¯æ„å‘³ãŒãªã„
     mesh.material = common_material;
 
     mesh.closest_hit = common_closest_hit;
     mesh.any_hit = common_any_hit;
 
-    // NOTE: OptiX‚Å‚Ís—Dæ‚Á‚Û‚¢‚Ì‚ÅA‰E‚©‚ç‡”Ô‚É“K—p‚³‚ê‚é
+    // NOTE: OptiXã§ã¯è¡Œå„ªå…ˆã£ã½ã„ã®ã§ã€å³ã‹ã‚‰é †ç•ªã«é©ç”¨ã•ã‚Œã‚‹
     Matrix4x4 mat = Matrix4x4::translate(center) * Matrix4x4::rotate(radians, axis) * Matrix4x4::scale(scale);
 
     loadMesh(filename, mesh, mat);
@@ -814,48 +814,48 @@ void setupCamera()
     camera_fov = 35;
     camera_up = make_float3(0.0f, 1.0f, 0.0f);
 
-    // ­‚µ‰“Œi
+    // å°‘ã—é æ™¯
     camera_eye = make_float3(13.91f, 166.787f, 413.00f);
     camera_lookat = make_float3(-6.59f, 169.94f, -9.11f);
 
-    // ‹ß‚Ã‚¢‚½ƒJƒbƒg
+    // è¿‘ã¥ã„ãŸã‚«ãƒƒãƒˆ
     camera_eye = make_float3(1.65f, 196.01f, 287.97f);
     camera_lookat = make_float3(-7.06f, 76.34f, 26.96f);
 
-    // Lucy‚ğ’†S‚É‚µ‚½ƒJƒbƒg
+    // Lucyã‚’ä¸­å¿ƒã«ã—ãŸã‚«ãƒƒãƒˆ
     //camera_eye = make_float3(0.73f, 160.33f, 220.03f);
     //camera_lookat = make_float3(0.37f, 149.31f, 201.70f);
 
-    // Lucy‚ğ’†S‚É‚µ‚½ƒJƒbƒg2iƒŒƒCƒgƒŒ‡h7’ño”Åj
+    // Lucyã‚’ä¸­å¿ƒã«ã—ãŸã‚«ãƒƒãƒˆ2ï¼ˆãƒ¬ã‚¤ãƒˆãƒ¬åˆå®¿7æå‡ºç‰ˆï¼‰
     //camera_eye = make_float3(9.55f, 144.84f, 214.05f);
     //camera_lookat = make_float3(1.60f, 149.38f, 200.70f);
 
-    // Lucy‚ğ’†S‚É‚µ‚½ƒJƒbƒg3
+    // Lucyã‚’ä¸­å¿ƒã«ã—ãŸã‚«ãƒƒãƒˆ3
     //camera_eye = make_float3(9.08f, 150.98f, 210.78f);
     //camera_lookat = make_float3(1.41f, 150.12f, 200.42f);
 
-    // Mandelbox‘S‘Ì
+    // Mandelboxå…¨ä½“
     //camera_eye = make_float3(-815.63f, -527.19f, -674.00f);
     //camera_lookat = make_float3(-7.06f, 76.34f, 26.96f);
 
-    // ’†S
+    // ä¸­å¿ƒ
     // camera_eye = make_float3(0, 0, 0);
     // camera_lookat = make_float3(0, 0, -30.0f);
 
     camera_rotate = Matrix4x4::identity();
 }
 
-// ƒAƒjƒ[ƒVƒ‡ƒ“‚ÌÀ‘•
+// ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®å®Ÿè£…
 void updateFrame(float time)
 {
-    // NOTE: false‚É‚·‚ê‚Î©—RƒJƒƒ‰‚É‚È‚é
+    // NOTE: falseã«ã™ã‚Œã°è‡ªç”±ã‚«ãƒ¡ãƒ©ã«ãªã‚‹
     bool update_camera = true;
     float t = time;
     float vignetteIntensity = 0.9;
 
     //time = 5.5;
 
-    // ’†‹——£
+    // ä¸­è·é›¢
     light_parameters[0].position = make_float3(0.01f, 156.787f, 220.00f) + sinFbm3(0.3 * time) + make_float3(30 * (time - 2.5), 0, 0);
     light_parameters[1].position = make_float3(3.8f, 161.4f, 200.65f) + 4.0 * sinFbm3(0.3 * time + 5.23);
 
@@ -869,20 +869,20 @@ void updateFrame(float time)
 
         if (time < 2)
         {
-            // ƒ‰ƒCƒg‚ÌƒAƒjƒ[ƒVƒ‡ƒ“ ’†‹——£
+            // ãƒ©ã‚¤ãƒˆã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ ä¸­è·é›¢
             camera_eye = lerp(make_float3(1.65f, 196.01f, 287.97f), make_float3(-7.06f, 76.34f, 26.96f), t * 0.01f) + eye_shake;
             camera_lookat = make_float3(0.01f, 146.787f, 190.00f) + make_float3(5 * (t - 2.5), 0, 0) + target_shake;
         }
         else if (time < 3)
         {
-            // ƒ‰ƒCƒg‚ÌƒAƒjƒ[ƒVƒ‡ƒ“ Lucy‚É‹ß‚Ã‚­
+            // ãƒ©ã‚¤ãƒˆã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ Lucyã«è¿‘ã¥ã
             t = time * 0.05f;
             camera_lookat = make_float3(1.41f, 150.12f, 200.42f);
             camera_eye = camera_lookat + 10 * make_float3(sin(t), 0.4 + t, cos(t)) + eye_shake;
         }
         else if (time < 3.5)
         {
-            // ƒ‰ƒCƒg‚ÌƒAƒjƒ[ƒVƒ‡ƒ“ ’†‹——£i‰E‚Éƒ‰ƒCƒg‚ªˆÚ“®j
+            // ãƒ©ã‚¤ãƒˆã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ ä¸­è·é›¢ï¼ˆå³ã«ãƒ©ã‚¤ãƒˆãŒç§»å‹•ï¼‰
             t = time;
             camera_eye = lerp(make_float3(1.65f, 196.01f, 287.97f), make_float3(-7.06f, 76.34f, 26.96f), t * 0.01f) + eye_shake;
             camera_lookat = make_float3(0.01f, 146.787f, 190.00f) + make_float3(5 * (t - 2.5), 0, 0) + target_shake;
@@ -892,7 +892,7 @@ void updateFrame(float time)
         }
         else if (time < 5)
         {
-            // Mandelbox‚ÌƒJƒƒ‰ˆÚ“®
+            // Mandelboxã®ã‚«ãƒ¡ãƒ©ç§»å‹•
             t = 0.5 * (time - 3.5);
             float3 e0 = make_float3(9.55f, 144.84f, 214.05f);
             float3 e1 = make_float3(16.13, 191.42, 539.42);
@@ -906,7 +906,7 @@ void updateFrame(float time)
         }
         else if (time < 7)
         {
-            // Mandelbox‚Ì•ÏŒ`
+            // Mandelboxã®å¤‰å½¢
             t = time - 5;
             camera_eye = make_float3(-100.96, 95.12 + 100 + 2 * t, 387.54) + eye_shake;
             camera_lookat = make_float3(45.95, -58.26 + 100 + 2 * t, -194.11) + target_shake;
@@ -916,7 +916,7 @@ void updateFrame(float time)
         }
         else if (time < 10)
         {
-            // MengerSponge‚ÌEmissive‚ÌƒAƒjƒ[ƒVƒ‡ƒ“
+            // MengerSpongeã®Emissiveã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³
             t = time - 7;
             float ease = easeInOutCubic(t / 3);
             camera_eye = make_float3(-49.8, 36.14, 200.0) + make_float3(0.2, 0.1, 50) * ease + eye_shake;
@@ -1006,7 +1006,7 @@ void glutInitialize(int* argc, char** argv)
 
 void glutRun()
 {
-    // Initialize GL state                                                            
+    // Initialize GL state
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     glOrtho(0, 1, 0, 1, -1, 1);
@@ -1053,7 +1053,7 @@ void fpsCameraMove(float3& camera_local_offset, float speed)
 
 void glutDisplay()
 {
-    // 10•b‚Åƒ‹[ƒv
+    // 10ç§’ã§ãƒ«ãƒ¼ãƒ—
     if (animate_time > 10.0f)
     {
         animate_begin_time = sutil::currentTime();
@@ -1061,10 +1061,10 @@ void glutDisplay()
 
     animate_time = sutil::currentTime() - animate_begin_time;
 
-    // NOTE: ƒfƒoƒbƒO—p‚ÉŠJnŠÔ‚ğ’²®B’ño‚É‚ÍƒRƒƒ“ƒgƒAƒEƒg‚·‚é
+    // NOTE: ãƒ‡ãƒãƒƒã‚°ç”¨ã«é–‹å§‹æ™‚é–“ã‚’èª¿æ•´ã€‚æå‡ºæ™‚ã«ã¯ã‚³ãƒ¡ãƒ³ãƒˆã‚¢ã‚¦ãƒˆã™ã‚‹
     // animate_time += 7;
 
-    // FPSƒJƒƒ‰ˆÚ“®
+    // FPSã‚«ãƒ¡ãƒ©ç§»å‹•
     {
         float speed = 5;
         if (is_key_W_pressed) fpsCameraMove(make_float3(0, 0, -1), speed);
@@ -1096,7 +1096,7 @@ void glutDisplay()
     {
         if (isEarlyFrame)
         {
-            // NOTE: commandList ‚ğg‚í‚È‚¢ê‡
+            // NOTE: commandList ã‚’ä½¿ã‚ãªã„å ´åˆ
             // context->launch( 0, width, height );
 
             commandListWithoutDenoiser->execute();
@@ -1629,7 +1629,7 @@ int main(int argc, char** argv)
     double time_limit = 60 * 60;// 1 hour
     bool use_time_limit = false;
 
-    // “®‰æ‚Ì˜A”Ô‰æ‘œ—p
+    // å‹•ç”»ã®é€£ç•ªç”»åƒç”¨
     float movie_time_start = -1.0f;
     float movie_time_end = -1.0f;
     float movie_fps = -1.0f;
@@ -1867,7 +1867,7 @@ int main(int argc, char** argv)
 
         context->validate();
 
-        // “®‰æ‚Ì‰æ‘œ˜A”Ô‘‚«o‚µƒ‚[ƒh
+        // å‹•ç”»ã®ç”»åƒé€£ç•ªæ›¸ãå‡ºã—ãƒ¢ãƒ¼ãƒ‰
         if (movie_fps > 0.0f && movie_time_start >= 0.0f && movie_time_end >= 0.0f)
         {
             setupPostprocessing();
@@ -1897,10 +1897,10 @@ int main(int argc, char** argv)
             std::cout << "[info] init_sample_per_launch: " << init_sample_per_launch << std::endl;
             std::cout << "[info] tonemap_exposure: " << tonemap_exposure << std::endl;
 
-            // ‰æ‘œ‚Ì”ñ“¯Šú•Û‘¶‚Ì‚½‚ß‚ÌƒXƒŒƒbƒh
+            // ç”»åƒã®éåŒæœŸä¿å­˜ã®ãŸã‚ã®ã‚¹ãƒ¬ãƒƒãƒ‰
             std::vector<std::thread> threads;
 
-            // ‰æ‘œ‚Ì”ñ“¯Šú•Û‘¶‚Ì‚½‚ß‚Ìƒoƒbƒtƒ@
+            // ç”»åƒã®éåŒæœŸä¿å­˜ã®ãŸã‚ã®ãƒãƒƒãƒ•ã‚¡
             std::vector<unsigned char> pix(width * height * 3);
 
             for (int frame = frame_start; frame < frame_start + frame_count; ++frame)
@@ -1912,7 +1912,7 @@ int main(int argc, char** argv)
                 bool finalFrame = false;
                 total_sample = 0;
 
-                // 1‰ñ–Ú‚ÌƒTƒ“ƒvƒŠƒ“ƒO”‚ğ‰Šú’l‚ÉƒŠƒZƒbƒg
+                // 1å›ç›®ã®ã‚µãƒ³ãƒ—ãƒªãƒ³ã‚°æ•°ã‚’åˆæœŸå€¤ã«ãƒªã‚»ãƒƒãƒˆ
                 sample_per_launch = init_sample_per_launch;
 
                 double global_remain_time = time_limit - (frame_start_time - launch_time);
@@ -1924,7 +1924,7 @@ int main(int argc, char** argv)
 
                 std::cout << "[info] frame: " << frame << "\tmovie_time:" << movie_time << "\tframe_time_limit:" << frame_time_limit << std::endl;
 
-                // NOTE: ÀÛ‚É‚Í2‰ñƒ‹[ƒv‚Ìê‡‚µ‚©‚È‚¢
+                // NOTE: å®Ÿéš›ã«ã¯2å›ãƒ«ãƒ¼ãƒ—ã®å ´åˆã—ã‹ãªã„
                 for (int i = 0; !finalFrame; ++i)
                 {
                     double now = sutil::currentTime();
@@ -1936,12 +1936,12 @@ int main(int argc, char** argv)
                     std::cout << "[info] frame_global: " << frame << "\tframe_local:" << (frame - frame_start) << " / " << frame_count << "(" << ((double)(frame + 1 - frame_start) / frame_count * 100) << "%)\tlaunch : " << i
                         << "\tused_time:" << (now - launch_time) << "/" << time_limit << "(" << ((double)(now - launch_time) / time_limit * 100) << "%)" << std::endl;
 
-                    // 1‰ñ–Ú‚ÌŒ‹‰Ê‚©‚çAŠÔØ‚ê‚µ‚È‚¢ sample_per_launch ‚ğŒˆ’è‚·‚é
+                    // 1å›ç›®ã®çµæœã‹ã‚‰ã€æ™‚é–“åˆ‡ã‚Œã—ãªã„ sample_per_launch ã‚’æ±ºå®šã™ã‚‹
                     if (i == 1)
                     {
                         int new_sample_per_launch = (int)(remain_time / delta_time * auto_set_sample_per_launch_scale * sample_per_launch);
 
-                        // 1ˆÈã‚É‚µ‚È‚¢‚Æ^‚ÁˆÃ‚ÈŒ‹‰Ê‚É‚È‚é
+                        // 1ä»¥ä¸Šã«ã—ãªã„ã¨çœŸã£æš—ãªçµæœã«ãªã‚‹
                         new_sample_per_launch = max(1, new_sample_per_launch);
 
 
@@ -2031,14 +2031,14 @@ int main(int argc, char** argv)
             double total_time = finish_time - launch_time;
             std::cout << "[info] Finish!\ttotal_time: " << total_time << " sec.\tall_frame_total_sample: " << all_frame_total_sample << std::endl;
         }
-        // ƒCƒ“ƒ^ƒ‰ƒNƒeƒBƒuƒ‚[ƒh
+        // ã‚¤ãƒ³ã‚¿ãƒ©ã‚¯ãƒ†ã‚£ãƒ–ãƒ¢ãƒ¼ãƒ‰
         else if (out_file.empty())
         {
             animate_begin_time = sutil::currentTime();
             context["sample_per_launch"]->setUint(10);
             glutRun();
         }
-        // Ã~‰æƒ‚[ƒh
+        // é™æ­¢ç”»ãƒ¢ãƒ¼ãƒ‰
         else
         {
             setupPostprocessing();
@@ -2080,10 +2080,10 @@ int main(int argc, char** argv)
 
             bool finalFrame = false;
 
-            // NOTE: time_limit ‚ªw’è‚³‚ê‚Ä‚¢‚½‚çAƒTƒ“ƒvƒ‹”‚Í–³§ŒÀ‚É‚·‚é
+            // NOTE: time_limit ãŒæŒ‡å®šã•ã‚Œã¦ã„ãŸã‚‰ã€ã‚µãƒ³ãƒ—ãƒ«æ•°ã¯ç„¡åˆ¶é™ã«ã™ã‚‹
             for (int i = 0; !finalFrame && (total_sample < sampleMax || use_time_limit); ++i)
             {
-                // TODO: “®ìŠm”F
+                // TODO: å‹•ä½œç¢ºèª
                 finalFrame |= (!use_time_limit && total_sample == sampleMax - 1);
 
                 double now = sutil::currentTime();
@@ -2100,7 +2100,7 @@ int main(int argc, char** argv)
                     std::cout << "[info] chnage sample_per_launch: " << sample_per_launch << " to " << sample_per_launch << std::endl;
                 }
 
-                // NOTE: ‘OƒtƒŒ[ƒ€‚ÌŠ—vŠÔ‚©‚çŸ‚ÌƒtƒŒ[ƒ€‚ª§ŒÀŠÔ“à‚ÉI‚é‚©‚ğ—\‘ª‚·‚éBƒfƒmƒCƒY‚ğl—¶‚µ‚Ä last_frame_scale ”{‚ÉŒ©Ï‚à‚é
+                // NOTE: å‰ãƒ•ãƒ¬ãƒ¼ãƒ ã®æ‰€è¦æ™‚é–“ã‹ã‚‰æ¬¡ã®ãƒ•ãƒ¬ãƒ¼ãƒ ãŒåˆ¶é™æ™‚é–“å†…ã«çµ‚ã‚‹ã‹ã‚’äºˆæ¸¬ã™ã‚‹ã€‚ãƒ‡ãƒã‚¤ã‚ºã‚’è€ƒæ…®ã—ã¦ last_frame_scale å€ã«è¦‹ç©ã‚‚ã‚‹
                 if (used_time + delta_time * last_frame_scale > time_limit)
                 {
                     if (sample_per_launch == 1)

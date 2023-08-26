@@ -150,7 +150,7 @@ RT_PROGRAM void pathtrace_camera()
                 break;
             }
 
-            // Russian roulette termination 
+            // Russian roulette termination
             /*if(prd.depth >= rr_begin_depth)
             {
                 float pcont = fmaxf(prd.attenuation);
@@ -195,7 +195,7 @@ RT_PROGRAM void pathtrace_camera()
         float a = static_cast<float>(sample_per_launch) / static_cast<float>(total_sample + sample_per_launch);
         pixel_liner = lerp(make_float3(liner_buffer[launch_index]), pixel_liner, a);
 
-        // NOTE: ƒmƒCƒY—p‚Ìî•ñ‚Í1ƒtƒŒ[ƒ€–Ú‚µ‚©XV‚µ‚È‚¢
+        // NOTE: ãƒã‚¤ã‚ºç”¨ã®æƒ…å ±ã¯1ãƒ•ãƒ¬ãƒ¼ãƒ ç›®ã—ã‹æ›´æ–°ã—ãªã„
         // pixel_albedo = lerp(make_float3(input_albedo_buffer[launch_index]), pixel_albedo, a);
         // pixel_normal = lerp(make_float3(input_normal_buffer[launch_index]), pixel_normal, a);
     }
@@ -210,8 +210,8 @@ RT_PROGRAM void pathtrace_camera()
     liner_buffer[launch_index] = make_float4(pixel_liner, 1.0);
     output_buffer[launch_index] = make_float4(pixel_output, 1.0);
 
-    // NOTE: ƒfƒmƒCƒY—p‚Ìî•ñ‚Í1ƒtƒŒ[ƒ€–Ú‚µ‚©XV‚µ‚È‚¢
-    // NOTE: DOF‚Æ‚©ƒ‚[ƒVƒ‡ƒ“ƒuƒ‰[‚È‚ç–ˆƒtƒŒ[ƒ€XV‚µ‚½•û‚ª‚¢‚¢‚Ì‚©‚à‚µ‚ê‚È‚¢
+    // NOTE: ãƒ‡ãƒã‚¤ã‚ºç”¨ã®æƒ…å ±ã¯1ãƒ•ãƒ¬ãƒ¼ãƒ ç›®ã—ã‹æ›´æ–°ã—ãªã„
+    // NOTE: DOFã¨ã‹ãƒ¢ãƒ¼ã‚·ãƒ§ãƒ³ãƒ–ãƒ©ãƒ¼ãªã‚‰æ¯ãƒ•ãƒ¬ãƒ¼ãƒ æ›´æ–°ã—ãŸæ–¹ãŒã„ã„ã®ã‹ã‚‚ã—ã‚Œãªã„
     if (frame_number == 1)
     {
         input_albedo_buffer[launch_index] = make_float4(pixel_albedo, 1.0f);
@@ -220,7 +220,7 @@ RT_PROGRAM void pathtrace_camera()
     }
 }
 
-// ƒV[ƒ“‚ÌƒfƒoƒbƒO—p‚ÌŒy—ÊƒŒƒ“ƒ_ƒ‰[
+// ã‚·ãƒ¼ãƒ³ã®ãƒ‡ãƒãƒƒã‚°ç”¨ã®è»½é‡ãƒ¬ãƒ³ãƒ€ãƒ©ãƒ¼
 RT_PROGRAM void debug_camera()
 {
     size_t2 screen = output_buffer.size();
@@ -363,11 +363,11 @@ RT_FUNCTION float3 DirectLight(MaterialParameter& mat, State& state)
     float3 f = prgs_BSDF_Eval[bsdf_id](mat, state, current_prd);
     float3 result = powerHeuristic(lightPdf, current_prd.pdf) * current_prd.attenuation * f * lightSample.emission / max(0.001f, lightPdf);
 
-    // FIXME: ª–{‚ÌŒ´ˆö‚ğ‰ğ–¾‚µ‚½‚¢
+    // FIXME: æ ¹æœ¬ã®åŸå› ã‚’è§£æ˜ã—ãŸã„
     if (isnan(result.x) || isnan(result.y) || isnan(result.z))
         return make_float3(0.0f);
 
-    // NOTE: •‰‚Ì‹P“x‚ÌƒŒƒC‚ğ”O‚Ìˆ×ƒ`ƒFƒbƒN
+    // NOTE: è² ã®è¼åº¦ã®ãƒ¬ã‚¤ã‚’å¿µã®ç‚ºãƒã‚§ãƒƒã‚¯
     if (result.x < 0.0f || result.y < 0.0f || result.z < 0.0f)
         return make_float3(0.0f);
 
@@ -396,10 +396,10 @@ RT_PROGRAM void closest_hit()
     current_prd.normal = ffnormal;
     current_prd.distance = t_hit;
 
-    // FIXME: Sample‚É‚à‚Á‚Ä‚¢‚­
+    // FIXME: Sampleã«ã‚‚ã£ã¦ã„ã
     current_prd.origin = hitpoint;
 
-    // FIXME: bsdfId ‚©‚ç”»’è
+    // FIXME: bsdfId ã‹ã‚‰åˆ¤å®š
     current_prd.specularBounce = false;
 
     // Direct light Sampling

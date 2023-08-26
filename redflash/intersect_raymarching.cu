@@ -17,7 +17,7 @@ rtDeclareVariable(float3, aabb_min, , );
 rtDeclareVariable(float3, aabb_max, , );
 rtDeclareVariable(float3, texcoord, attribute texcoord, );
 
-// プライマリレイのDepthを利用した高速化用
+// 繝励Λ繧､繝槭Μ繝ｬ繧､縺ｮDepth繧貞茜逕ｨ縺励◆鬮倬溷喧逕ｨ
 rtDeclareVariable(PerRayData_pathtrace, current_prd, rtPayload, );
 
 static __forceinline__ __device__ float3 abs_float3(float3 v)
@@ -209,7 +209,7 @@ RT_CALLABLE_PROGRAM void materialAnimation_Raymarching(MaterialParameter& mat, S
 {
     if (time < 7) return;
 
-    // MengerSpongeのシーンのEmissiveアニメーション
+    // MengerSponge縺ｮ繧ｷ繝ｼ繝ｳ縺ｮEmissive繧｢繝九Γ繝ｼ繧ｷ繝ｧ繝ｳ
     float3 p = state.hitpoint;
     float edge = calcEdge(p, 0.02);
     mat.emission = make_float3(0.2, 0.2, 1) * pow(edge, 2.0f) * abs(sin(0.1 * p.z + 0.5 * time));
