@@ -1946,7 +1946,7 @@ int main(int argc, char** argv)
                     // 1回目の結果から、時間切れしない sample_per_launch を決定する
                     if (i == 1)
                     {
-                        int new_sample_per_launch = (int)(remain_time / delta_time * auto_set_sample_per_launch_scale * sample_per_launch);
+                        int new_sample_per_launch = (int)(remain_time / delta_time * sample_per_launch);
 
                         // 1以上にしないと真っ暗な結果になる
                         new_sample_per_launch = max(1, new_sample_per_launch);
