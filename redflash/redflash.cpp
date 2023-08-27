@@ -862,7 +862,7 @@ void updateFrame(float time)
     light_parameters[1].position = make_float3(0.0f, 100.f, 0.0f);
 
     float3 eye_shake = 0.1f * sinFbm3(t / 10.0 + 2.323);
-    float3 target_shake = 0.001f * sinFbm3(t / 10.0 + 5.42323);
+    float3 target_shake = 0.05f * sinFbm3(t / 10.0 + 5.42323);
 
     if (update_camera)
     {
@@ -870,7 +870,7 @@ void updateFrame(float time)
         camera_fov = 70.0f;
 
         camera_eye = make_float3(3.5f, 0.5f, 8.0f) * 0.4 + eye_shake;
-        camera_lookat = make_float3(0.0f, 0.0f, 0.0f);
+        camera_lookat = make_float3(0.0f, 0.0f, 0.0f) + target_shake;
 
         /*
         if (time < 2)

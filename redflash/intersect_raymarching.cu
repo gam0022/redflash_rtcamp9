@@ -224,7 +224,7 @@ float2 map_id(float3 pos)
 
         // rot(p4d.zw, time / 5 * TAU);
         float2 p4d_zw = make_float2(p4d.z, p4d.w);
-        rot(p4d_zw, (time + 0.01) / 5 * TAU);
+        rot(p4d_zw, (-time + 0.01) / 5 * TAU);
         p4d.z = p4d_zw.x;
         p4d.w = p4d_zw.y;
 
