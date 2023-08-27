@@ -8,6 +8,7 @@ using namespace optix;
 rtDeclareVariable(float, time, , );
 
 rtDeclareVariable(float, scene_epsilon, , );
+rtDeclareVariable(uint, raymarching_iteration, , );
 rtDeclareVariable(float3, geometric_normal, attribute geometric_normal, );
 rtDeclareVariable(float3, shading_normal, attribute shading_normal, );
 rtDeclareVariable(optix::Ray, ray, rtCurrentRay, );
@@ -234,7 +235,7 @@ RT_PROGRAM void intersect(int primIdx)
         t = max(current_prd.distance, t);
     }
 
-    for (int i = 0; i < 300; i++)
+    for (int i = 0; i < raymarching_iteration; i++)
     {
         p = ray.origin + t * ray.direction;
         d = map(p);
@@ -277,7 +278,7 @@ RT_PROGRAM void intersect_AutoRelaxation(int primIdx)
 
     while (t + r < ray.tmax          // miss
         && r > eps    // hit
-        && i < 300)  // didn't converge
+        && i < raymarching_iteration)  // didn't converge
     {
         float T = t + z;
         float R = map(ray.origin + T * ray.direction);

@@ -449,6 +449,7 @@ void createContext()
     context->setMaxTraceDepth(2);
 
     context["scene_epsilon"]->setFloat(0.001f);
+    context["raymarching_iteration"]->setUint(300);
     // context["rr_begin_depth"]->setUint( rr_begin_depth );
     context["max_depth"]->setUint(max_depth);
     context["sample_per_launch"]->setUint(sample_per_launch);
