@@ -462,11 +462,19 @@ RT_PROGRAM void envmap_miss()
 {
     float theta = atan2f(ray.direction.x, ray.direction.z);
     float phi = M_PIf * 0.5f - acosf(ray.direction.y);
-    float u = (theta + M_PIf) * (0.5f * M_1_PIf);
+
+    // 環境マップを回転
+    // float u = (theta + M_PIf * 0) * (0.5f * M_1_PIf);
+    float u = theta * (0.5f * M_1_PIf);
+
     float v = 0.5f * (1.0f + sin(phi));
 
-     // float intensity = time < 7 ? 1 : 0.2;
-    float intensity = 1;
+    // float intensity = time < 5 ? 1 : 0.2;
+    // float intensity = 1;
+    float s = 0.5 + 0.5 * sin(time * TAU / 10);
+    s = s * s;
+    s = s * s;
+    float intensity = lerp(0.05, 1.0, s);
     current_prd.radiance += make_float3(tex2D(envmap, u, v)) * current_prd.attenuation * intensity;
 
     current_prd.albedo = make_float3(0.0f);

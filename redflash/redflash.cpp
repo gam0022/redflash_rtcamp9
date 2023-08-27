@@ -689,9 +689,9 @@ GeometryGroup createGeometryLight()
     {
         LightParameter light;
         light.lightType = SPHERE;
-        light.position = make_float3(0.01f, 166.787f, 190.00f);
-        light.radius = 1.0f;
-        light.emission = make_float3(20.0f, 10.00f, 5.00f) * 2;
+        light.position = make_float3(0.0f, 0.0f, 0.0f);
+        light.radius = 0.05f;
+        light.emission = make_float3(0.7f, 0.7f, 20.0f);
         light_parameters.push_back(light);
     }
 
@@ -699,7 +699,7 @@ GeometryGroup createGeometryLight()
         LightParameter light;
         light.lightType = SPHERE;
         light.position = make_float3(3.8f, 161.4f, 200.65f);
-        light.radius = 0.5f;
+        light.radius = 1.0f;
         light.emission = make_float3(20.0f, 10.00f, 5.00f) * 2;
         light_parameters.push_back(light);
     }
@@ -796,10 +796,7 @@ void setupScene()
 
     // Envmap
     const float3 default_color = make_float3(1.0f, 1.0f, 1.0f);
-    const std::string texpath = resolveDataPath("polyhaven/blue_photo_studio_4k.hdr");
-    //const std::string texpath = resolveDataPath("Ice_Lake/Ice_Lake_Ref.hdr");
-    //const std::string texpath = resolveDataPath("Ice_Lake/Ice_Lake_Env.hdr");
-    //const std::string texpath = resolveDataPath("Desert_Highway/Road_to_MonumentValley_Env.hdr");
+    const std::string texpath = resolveDataPath("polyhaven/neon_photostudio_4k.hdr");
     context["envmap"]->setTextureSampler(sutil::loadTexture(context, texpath, default_color));
 
     // Material Parameters
@@ -857,18 +854,18 @@ void updateFrame(float time)
     //time = 5.5;
 
     // 中距離
-    light_parameters[0].position = make_float3(0.01f, 156.787f, 220.00f) + sinFbm3(0.3 * time) + make_float3(30 * (time - 2.5), 0, 0);
-    light_parameters[1].position = make_float3(3.8f, 161.4f, 200.65f) + 4.0 * sinFbm3(0.3 * time + 5.23);
+    light_parameters[0].position = make_float3(0.0f, 0.0f, 0.0f);
+    light_parameters[1].position = make_float3(0.0f, 100.f, 0.0f);
 
-    float3 eye_shake = 0.01f * sinFbm3(t + 2.323);
-    float3 target_shake = 0.001f * sinFbm3(t + 5.42323);
+    float3 eye_shake = 0.1f * sinFbm3(t / 10.0 + 2.323);
+    float3 target_shake = 0.001f * sinFbm3(t / 10.0 + 5.42323);
 
     if (update_camera)
     {
         camera_up = make_float3(0.0f, 1.0f, 0.0f);
-        camera_fov = 20.0f;
+        camera_fov = 70.0f;
 
-        camera_eye = make_float3(3.5f, 0.5f, 8.0f);
+        camera_eye = make_float3(3.5f, 0.5f, 8.0f) * 0.4 + eye_shake;
         camera_lookat = make_float3(0.0f, 0.0f, 0.0f);
 
         /*
