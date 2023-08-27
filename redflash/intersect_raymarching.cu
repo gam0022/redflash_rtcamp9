@@ -239,9 +239,9 @@ float2 map_id(float3 pos)
     float _MengerScale0 = 2.37;
     float _MengerIteration0 = 3;
 
-    float _MengerUniformScale1 = 0.8;
-    float3 _MengerOffset1 = make_float3(1.06, 1.81, 1.91);
-    float _MengerScale1 = 2.2;
+    float _MengerUniformScale1 = 0.7;
+    float3 _MengerOffset1 = make_float3(0.88, 1.52, 0.13);
+    float _MengerScale1 = 2.37;
     float _MengerIteration1 = 2;
 
     float2 m0 = dMengerDouble(p / _MengerUniformScale0, _MengerOffset0, _MengerScale0, _MengerIteration0, 0.2, 0);
