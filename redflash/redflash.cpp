@@ -796,7 +796,7 @@ void setupScene()
 
     // Envmap
     const float3 default_color = make_float3(1.0f, 1.0f, 1.0f);
-    const std::string texpath = resolveDataPath("GrandCanyon_C_YumaPoint/GCanyon_C_YumaPoint_3k.hdr");
+    const std::string texpath = resolveDataPath("polyhaven/blue_photo_studio_4k.hdr");
     //const std::string texpath = resolveDataPath("Ice_Lake/Ice_Lake_Ref.hdr");
     //const std::string texpath = resolveDataPath("Ice_Lake/Ice_Lake_Env.hdr");
     //const std::string texpath = resolveDataPath("Desert_Highway/Road_to_MonumentValley_Env.hdr");
