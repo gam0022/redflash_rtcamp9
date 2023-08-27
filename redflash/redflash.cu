@@ -464,8 +464,8 @@ RT_PROGRAM void envmap_miss()
     float phi = M_PIf * 0.5f - acosf(ray.direction.y);
 
     // 環境マップを回転
-    // float u = (theta + M_PIf * 0) * (0.5f * M_1_PIf);
-    float u = theta * (0.5f * M_1_PIf);
+    // float u = (theta + M_PIf) * (0.5f * M_1_PIf);
+    float u = (theta + M_PIf * -0.2) * (0.5f * M_1_PIf);
 
     float v = 0.5f * (1.0f + sin(phi));
 
