@@ -506,7 +506,7 @@ void createContext()
     // Raymarching programs
     ptx = sutil::getPtxString(SAMPLE_NAME, "intersect_raymarching.cu");
     pgram_bounding_box_raymarching = context->createProgramFromPTXString(ptx, "bounds");
-    pgram_intersection_raymarching = context->createProgramFromPTXString(ptx, "intersect");
+    pgram_intersection_raymarching = context->createProgramFromPTXString(ptx, "intersect_AutoRelaxation");
 
     // Material Custom Program
     setupMaterialAnimationProgram(ptx);
