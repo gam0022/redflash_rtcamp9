@@ -634,6 +634,8 @@ GeometryGroup createGeometryTriangles()
     MaterialParameter mat;
     std::vector<GeometryInstance> gis;
 
+    /*
+
     // Mesh cow
     std::string mesh_file = resolveDataPath("cow.obj");
     gis.push_back(createMesh(mesh_file, make_float3(0.0f, 300.0f, 0.0f), make_float3(500.0f)));
@@ -656,6 +658,8 @@ GeometryGroup createGeometryTriangles()
     //mat.clearcoatGloss = 0.0f;
     //mat.specularTint = 0.0;
     registerMaterial(gis.back(), mat);
+
+    */
 
     GeometryGroup shadow_group = context->createGeometryGroup(gis.begin(), gis.end());
     shadow_group->setAcceleration(context->createAcceleration("Trbvh"));
