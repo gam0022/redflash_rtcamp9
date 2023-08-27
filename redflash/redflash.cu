@@ -14,6 +14,7 @@ static __host__ __device__ __inline__ float powerHeuristic(float a, float b)
 
 // Scene wide variables
 rtDeclareVariable(float, scene_epsilon, , );
+rtDeclareVariable(uint, useLight, , );
 rtDeclareVariable(rtObject, top_object, , );
 rtDeclareVariable(uint2, launch_index, rtLaunchIndex, );
 rtDeclareVariable(PerRayData_pathtrace, current_prd, rtPayload, );
@@ -403,7 +404,7 @@ RT_PROGRAM void closest_hit()
     current_prd.specularBounce = false;
 
     // Direct light Sampling
-    if (!current_prd.specularBounce && current_prd.depth < max_depth)
+    if (useLight == 1 && !current_prd.specularBounce && current_prd.depth < max_depth)
     {
         current_prd.radiance += DirectLight(mat, state);
     }

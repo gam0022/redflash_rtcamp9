@@ -55,6 +55,9 @@ const char* const SAMPLE_NAME = "redflash";
 
 Context context = 0;
 
+// NEE処理のコストも無視できないのでライトは消す
+bool useLight = false;
+
 // 起動オプションで設定するパラメーター
 int width = 1920 / 2;
 int height = 1080 / 2;
@@ -450,6 +453,7 @@ void createContext()
 
     context["scene_epsilon"]->setFloat(0.001f);
     context["raymarching_iteration"]->setUint(300);
+    context["useLight"]->setUint(useLight ? 1 : 0);
     // context["rr_begin_depth"]->setUint( rr_begin_depth );
     context["max_depth"]->setUint(max_depth);
     context["sample_per_launch"]->setUint(sample_per_launch);
@@ -696,7 +700,7 @@ GeometryGroup createGeometryLight()
         light.position = make_float3(0.0f, 0.0f, 0.0f);
         light.radius = 0.05f;
         light.emission = make_float3(0.7f, 0.7f, 20.0f);
-        light_parameters.push_back(light);
+        if (useLight) light_parameters.push_back(light);
     }
 
     {
@@ -705,7 +709,7 @@ GeometryGroup createGeometryLight()
         light.position = make_float3(3.8f, 161.4f, 200.65f);
         light.radius = 1.0f;
         light.emission = make_float3(20.0f, 10.00f, 5.00f) * 2;
-        light_parameters.push_back(light);
+        if (useLight) light_parameters.push_back(light);
     }
 
     int index = 0;
@@ -858,8 +862,8 @@ void updateFrame(float time)
     //time = 5.5;
 
     // 中距離
-    light_parameters[0].position = make_float3(0.0f, 0.0f, 0.0f);
-    light_parameters[1].position = make_float3(0.0f, 100.f, 0.0f);
+    // light_parameters[0].position = make_float3(0.0f, 0.0f, 0.0f);
+    // light_parameters[1].position = make_float3(0.0f, 100.f, 0.0f);
 
     float3 eye_shake = 0.1f * sinFbm3(t / 10.0 + 2.323);
     float3 target_shake = 0.05f * sinFbm3(t / 10.0 + 5.42323);
@@ -935,7 +939,7 @@ void updateFrame(float time)
         */
     }
 
-    updateGeometryLight(time);
+    if (useLight) updateGeometryLight(time);
 
     camera_changed = true;
     context["time"]->setFloat(time);
