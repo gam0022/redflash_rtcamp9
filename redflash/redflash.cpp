@@ -672,7 +672,7 @@ GeometryGroup createGeometry()
     // Raymarcing
     gis.push_back(createRaymrachingObject(
         make_float3(0.0f),
-        make_float3(600.0f)));
+        make_float3(12.0f)));
     mat.albedo = make_float3(0.6f);
     mat.metallic = 0.8f;
     mat.roughness = 0.05f;
@@ -866,8 +866,12 @@ void updateFrame(float time)
     if (update_camera)
     {
         camera_up = make_float3(0.0f, 1.0f, 0.0f);
-        camera_fov = 35.0f;
+        camera_fov = 20.0f;
 
+        camera_eye = make_float3(3.5f, 0.5f, 8.0f);
+        camera_lookat = make_float3(0.0f, 0.0f, 0.0f);
+
+        /*
         if (time < 2)
         {
             // ライトのアニメーション 中距離
@@ -927,6 +931,7 @@ void updateFrame(float time)
             light_parameters[0].position = camera_eye + normalize(camera_eye - camera_lookat) * 8.0;
             vignetteIntensity = 1.3;
         }
+        */
     }
 
     updateGeometryLight(time);

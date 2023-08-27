@@ -99,10 +99,10 @@ __device__ inline float3 posteffect(float3 col, float2 uv)
     col *= vignette(uv);
 
     // fade in
-    col = lerp(col, make_float3(0), smoothstep(0.3, 0, time));
+    // col = lerp(col, make_float3(0), smoothstep(0.3, 0, time));
 
     // fade out
-    col = lerp(col, make_float3(0), smoothstep(9.7, 10, time));
+    // col = lerp(col, make_float3(0), smoothstep(9.7, 10, time));
 
     return col;
 }
@@ -465,7 +465,8 @@ RT_PROGRAM void envmap_miss()
     float u = (theta + M_PIf) * (0.5f * M_1_PIf);
     float v = 0.5f * (1.0f + sin(phi));
 
-    float intensity = time < 7 ? 1 : 0.2;
+     // float intensity = time < 7 ? 1 : 0.2;
+    float intensity = 1;
     current_prd.radiance += make_float3(tex2D(envmap, u, v)) * current_prd.attenuation * intensity;
 
     current_prd.albedo = make_float3(0.0f);

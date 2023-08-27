@@ -5,6 +5,8 @@
 
 using namespace optix;
 
+#define TAU 6.28318530718
+
 rtDeclareVariable(float, time, , );
 
 rtDeclareVariable(float, scene_epsilon, , );
@@ -29,6 +31,26 @@ static __forceinline__ __device__ float3 abs_float3(float3 v)
 static __forceinline__ __device__ float3 max_float3(float3 v, float a)
 {
     return make_float3(max(v.x, a), max(v.y, a), max(v.z, a));
+}
+
+void rot(float2& p, float a)
+{
+    // 行列バージョン（動かない）
+    // p = mul(make_float2x2(cos(a), sin(a), -sin(a), cos(a)), p);
+
+    p = cos(a) * p + sin(a) * make_float2(p.y, -p.x);
+}
+
+float sdBox(float3 p, float3 b)
+{
+    float3 q = abs_float3(p) - b;
+    return length(max_float3(q, 0.0)) + min(max(q.x, max(q.y, q.z)), 0.0);
+}
+
+float dBox(float3 p, float3 b)
+{
+    float3 q = abs_float3(p) - b;
+    return length(max_float3(q, 0.0));
 }
 
 static __forceinline__ __device__ float dMenger(float3 z0, float3 offset, float scale) {
@@ -123,39 +145,124 @@ float opRep(float p, float interval)
     return mod(p, interval) - interval * 0.5;
 }
 
-float map(float3 p)
+void opUnion(float2& m1, float2& m2)
 {
-    // return dMenger((p - center) / scale, make_float3(1.23, 1.65, 1.45), 2.56) * scale;
-    // return dMenger((p - center) / scale, make_float3(1, 1, 1), 3.1) * scale;
+    if (m2.x < m1.x) m1 = m2;
+}
 
-    if (time < 7)
+float2 dMengerDouble(float3 z0, float3 offset, float scale, float iteration, float width, float idOffset)
+{
+    float3 z = z0;
+    float w = 1.0;
+    float scale_minus_one = scale - 1.0;
+
+    for (int n = 0; n < iteration; n++)
     {
-        float s = 2.76;
-        float t;
+        z = abs_float3(z);
 
-        if (time < 3.5)
+        // if (z.x < z.y) z.xy = z.yx;
+        if (z.x < z.y)
         {
-            // nop
-        }
-        else if (time < 5)
-        {
-            t = time - 3.5;
-            s = 3.1 - 0.2 * t;
-        }
-        else
-        {
-            t = time - 5;
-            s = 2.8 - 0.2 * t;
+            float x = z.x;
+            z.x = z.y;
+            z.y = x;
         }
 
-        float scale = 70.0f;
-        return dMandelFast((p - center) / scale, s, 20) * scale;
+        // if (z.x < z.z) z.xz = z.zx;
+        if (z.x < z.z)
+        {
+            float x = z.x;
+            z.x = z.z;
+            z.z = x;
+        }
+
+        // if (z.y < z.z) z.yz = z.zy;
+        if (z.y < z.z)
+        {
+            float y = z.y;
+            z.y = z.z;
+            z.z = y;
+        }
+
+        z *= scale;
+        w *= scale;
+
+        z -= offset * scale_minus_one;
+
+        float tmp = offset.z * scale_minus_one;
+        if (z.z < -0.5 * tmp) z.z += tmp;
     }
-    else
-    {
-        float scale = 100;
-        return dMenger((p - center) / scale, make_float3(1.2, 1.0, 1.2 + 0.6 * sin(time + 6.2)), 2.8 + 0.1 * sin(time + 3.2)) * scale;
-    }
+
+    float e = 0.05;
+    float d0 = (dBox(z, make_float3(1, 1, 1)) - e) / w;
+    float d1 = (dBox(z, make_float3(1 + width, width, 1 + width)) - e) / w;
+    float2 m0 = make_float2(d0, 0 + idOffset);
+    float2 m1 = make_float2(d1, 1 + idOffset);
+    opUnion(m0, m1);
+
+    return m0;
+}
+
+float4 inverseStereographic(float3 p)
+{
+    float k = 2.0 / (1.0 + dot(p, p));
+    return make_float4(k * p, k - 1.0);
+}
+float3 stereographic(float4 p4)
+{
+    float k = 1.0 / (1.0 + p4.w);
+    return k * make_float3(p4.x, p4.y, p4.z);
+}
+
+#define _INVERSION4D_ON 1
+
+float2 map_id(float3 pos)
+{
+    #if _INVERSION4D_ON
+        float f = length(pos);
+        float4 p4d = inverseStereographic(pos);
+
+        // rot(p4d.zw, time / 5 * TAU);
+        float2 p4d_zw = make_float2(p4d.z, p4d.w);
+        rot(p4d_zw, time / 5 * TAU);
+        p4d.z = p4d_zw.x;
+        p4d.w = p4d_zw.y;
+
+        float3 p = stereographic(p4d);
+        // p = pos;
+    #else
+        float3 p = pos;
+    #endif
+
+    float _MengerUniformScale0 = 1;
+    float3 _MengerOffset0 = make_float3(0.82, 1.17, 0.46);
+    float _MengerScale0 = 2.37;
+    float _MengerIteration0 = 3;
+
+    float _MengerUniformScale1 = 0.8;
+    float3 _MengerOffset1 = make_float3(1.06, 1.81, 1.91);
+    float _MengerScale1 = 2.2;
+    float _MengerIteration1 = 2;
+
+    float2 m0 = dMengerDouble(p / _MengerUniformScale0, _MengerOffset0, _MengerScale0, _MengerIteration0, 0.2, 0);
+    m0.x *= _MengerUniformScale0;
+
+    float2 m1 = dMengerDouble(p / _MengerUniformScale1, _MengerOffset1, _MengerScale1, _MengerIteration1, 0.1, 2);
+    m1.x *= _MengerUniformScale1;
+
+    opUnion(m0, m1);
+
+    #if _INVERSION4D_ON
+        float e = length(p);
+        m0.x *= min(1.0, 0.7 / e) * max(1.0, f);
+    #endif
+
+    return m0;
+}
+
+float map(float3 pos)
+{
+    return map_id(pos).x;
 }
 
 #define calcNormal(p, dFunc, eps) normalize(\
@@ -208,20 +315,32 @@ RT_CALLABLE_PROGRAM void materialAnimation_Nop(MaterialParameter& mat, State& st
 
 RT_CALLABLE_PROGRAM void materialAnimation_Raymarching(MaterialParameter& mat, State& state)
 {
-    if (time < 7) return;
+    // float edge = calcEdge(p, 0.02);
 
-    // MengerSpongeのシーンのEmissiveアニメーション
     float3 p = state.hitpoint;
-    float edge = calcEdge(p, 0.02);
-    mat.emission = make_float3(0.2, 0.2, 1) * pow(edge, 2.0f) * abs(sin(0.1 * p.z + 0.5 * time));
+    float2 m = map_id(p);
+    uint id = uint(m.y);
 
-    float bar = smoothstep(0.7, 1.0, sin(p.z + 2 * time));
-    if (state.normal.y > 0.8) bar = 0;
-    mat.emission += bar * make_float3(0.2, 0.2, 20);
+    if (id == 0)
+    {
 
-    mat.roughness = 0.005;
-    mat.metallic = 0.5;
-    mat.albedo = make_float3(0.8);
+    }
+    else if (id == 1)
+    {
+        // mat.emission += make_float3(0.2, 0.2, 20);
+        mat.albedo = make_float3(0.9, 0.1, 0.1);
+    }
+    else if (id == 2)
+    {
+        mat.albedo = make_float3(0.2, 0.2, 0.9);
+        mat.roughness = 0.8;
+        mat.metallic = 0.01;
+    }
+    else if (id == 3)
+    {
+        mat.emission += make_float3(0.2, 0.2, 20);
+        mat.albedo = make_float3(0.5, 0.7, 0.7);
+    }
 }
 
 RT_PROGRAM void intersect(int primIdx)
