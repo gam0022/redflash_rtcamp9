@@ -856,17 +856,15 @@ void updateFrame(float time)
 {
     // NOTE: falseにすれば自由カメラになる
     bool update_camera = true;
-    float t = time;
+    // float t = time;
     float vignetteIntensity = 0.9;
-
-    //time = 5.5;
 
     // 中距離
     // light_parameters[0].position = make_float3(0.0f, 0.0f, 0.0f);
     // light_parameters[1].position = make_float3(0.0f, 100.f, 0.0f);
 
-    float3 eye_shake = 0.1f * sinFbm3(t / 10.0 + 2.323);
-    float3 target_shake = 0.05f * sinFbm3(t / 10.0 + 5.42323);
+    float3 eye_shake = 0.1f * sinFbm3(time / 10.0 + 2.323);
+    float3 target_shake = 0.05f * sinFbm3(time / 10.0 + 5.42323);
 
     if (update_camera)
     {
