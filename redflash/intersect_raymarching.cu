@@ -235,7 +235,7 @@ float4 map_id(float3 pos)
     #endif
 
     float _MengerUniformScale0 = 1;
-    float3 _MengerOffset0 = make_float3(0.85, 1.17, 0.46);
+    float3 _MengerOffset0 = make_float3(0.86, 1.17, 0.46);
     float _MengerScale0 = 2.37;
     float _MengerIteration0 = 4;
 
