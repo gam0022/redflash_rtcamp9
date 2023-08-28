@@ -1879,6 +1879,9 @@ int main(int argc, char** argv)
         // 動画の画像連番書き出しモード
         if (movie_fps > 0.0f && movie_time_start >= 0.0f && movie_time_end >= 0.0f)
         {
+            std::ofstream render_time_tsv("render_time.tsv");
+            render_time_tsv << "frame\tframe_time\trender_time" << std::endl;
+
             setupPostprocessing();
             Variable(denoiserStage->queryVariable("blend"))->setFloat(denoiseBlend);
             int all_frame_total_sample = 0;
@@ -2021,6 +2024,7 @@ int main(int argc, char** argv)
 
                         double end_time = sutil::currentTime();
                         std::cout << "[info] test_frame\trender_time:" << end_time - begin_time << "\tsample_per_launch: " << sample_per_launch << std::endl;
+                        render_time_tsv << frame << "\t" << movie_time << "\t" << end_time - begin_time << std::endl;
 
                         frame_number++;
                         total_sample += sample_per_launch;
