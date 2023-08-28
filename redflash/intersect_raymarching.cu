@@ -239,9 +239,10 @@ float4 map_id(float3 pos)
     float _MengerScale0 = 2.37;
     float _MengerIteration0 = 4;
 
-    float _MengerUniformScale1 = 0.7;
-    float3 _MengerOffset1 = make_float3(0.88 + 0.1 * sin(time * TAU / 10), 1.52, 0.13);
-    float _MengerScale1 = 2.37;
+    float _MengerUniformScale1 = 0.5;
+    float phase = 0.5 + 0.5 * pow(sin(time / 10 * TAU), 3.0);
+    float3 _MengerOffset1 = lerp(make_float3(0.88, 1.52, 0.13), make_float3(1.84, 2.03, 1.94), phase);
+    float _MengerScale1 = lerp(2.37, 2.2, phase);
     float _MengerIteration1 = 2;
 
     float4 m0 = dMengerDouble(p / _MengerUniformScale0, _MengerOffset0, _MengerScale0, _MengerIteration0, 0.2, 0);
@@ -321,6 +322,8 @@ RT_CALLABLE_PROGRAM void materialAnimation_Raymarching(MaterialParameter& mat, S
     float4 m = map_id(p);
     uint id = uint(m.y);
 
+    float3 emissive_color = make_float3(0.2, 0.2, 20);
+
     if (id == 0)
     {
 
@@ -337,14 +340,14 @@ RT_CALLABLE_PROGRAM void materialAnimation_Raymarching(MaterialParameter& mat, S
         mat.metallic = 0.5;
         float edge = calcEdge(p, 0.02);
         float a = (mod(time, 10) < 5.5) ? saturate(sin((m.w * 2 - time * 2) * TAU)) : 0;
-        mat.emission += edge * make_float3(0.2, 0.2, 20) * a;
+        mat.emission += edge * emissive_color * a;
     }
     else if (id == 3)
     {
         bool flag = (mod(time, 4) > 2);
         if (time < 5) flag = !flag;
         float a = flag ? saturate(sin((m.w * 2 - time * 2) * TAU)) : saturate(sin(TAU * time * 10));
-        mat.emission += make_float3(0.2, 0.2, 20) * a;
+        mat.emission += emissive_color * a;
         mat.albedo = make_float3(0.5, 0.7, 0.7);
     }
 }
