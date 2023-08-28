@@ -2,7 +2,8 @@ set srcDir=D:\Dropbox\RTCamp\redflash_rtcamp9\build\
 set srcCudaDir=D:\Dropbox\RTCamp\redflash_rtcamp9\redflash\
 set dstDir=D:\Dropbox\RTCamp\rtcamp9_submit_gpu\
 
-@rem cp %srcDir%bin\Release\rtcamp8.bat %dstDir%
+cp %srcDir%bin\Release\prod_i0.bat %dstDir%
+cp %srcDir%bin\Release\prod_i1.bat %dstDir%
 cp %srcDir%bin\Release\redflash.exe %dstDir%
 cp %srcDir%bin\Release\sutil_sdk.dll %dstDir%
 cp %srcCudaDir%redflash.h %dstDir%cuda\

@@ -145,12 +145,12 @@ float opRep(float p, float interval)
     return mod(p, interval) - interval * 0.5;
 }
 
-void opUnion(float2& m1, float2& m2)
+void opUnion(float4& m1, float4& m2)
 {
     if (m2.x < m1.x) m1 = m2;
 }
 
-float2 dMengerDouble(float3 z0, float3 offset, float scale, float iteration, float width, float idOffset)
+float4 dMengerDouble(float3 z0, float3 offset, float scale, float iteration, float width, float idOffset)
 {
     float3 z = z0;
     float w = 1.0;
@@ -196,8 +196,8 @@ float2 dMengerDouble(float3 z0, float3 offset, float scale, float iteration, flo
     float e = 0.05;
     float d0 = (dBox(z, make_float3(1, 1, 1)) - e) / w;
     float d1 = (dBox(z, make_float3(1 + width, width, 1 + width)) - e) / w;
-    float2 m0 = make_float2(d0, 0 + idOffset);
-    float2 m1 = make_float2(d1, 1 + idOffset);
+    float4 m0 = make_float4(d0, 0 + idOffset, 0, 0);
+    float4 m1 = make_float4(d1, 1 + idOffset, 0, 0);
     opUnion(m0, m1);
 
     return m0;
@@ -216,7 +216,7 @@ float3 stereographic(float4 p4)
 
 #define _INVERSION4D_ON 1
 
-float2 map_id(float3 pos)
+float4 map_id(float3 pos)
 {
     #if _INVERSION4D_ON
         float f = length(pos);
@@ -237,20 +237,22 @@ float2 map_id(float3 pos)
     float _MengerUniformScale0 = 1;
     float3 _MengerOffset0 = make_float3(0.82, 1.17, 0.46);
     float _MengerScale0 = 2.37;
-    float _MengerIteration0 = 3;
+    float _MengerIteration0 = 4;
 
     float _MengerUniformScale1 = 0.7;
-    float3 _MengerOffset1 = make_float3(0.88, 1.52, 0.13);
+    float3 _MengerOffset1 = make_float3(0.88 + 0.1 * sin(time * TAU / 10), 1.52, 0.13);
     float _MengerScale1 = 2.37;
     float _MengerIteration1 = 2;
 
-    float2 m0 = dMengerDouble(p / _MengerUniformScale0, _MengerOffset0, _MengerScale0, _MengerIteration0, 0.2, 0);
+    float4 m0 = dMengerDouble(p / _MengerUniformScale0, _MengerOffset0, _MengerScale0, _MengerIteration0, 0.2, 0);
     m0.x *= _MengerUniformScale0;
 
-    float2 m1 = dMengerDouble(p / _MengerUniformScale1, _MengerOffset1, _MengerScale1, _MengerIteration1, 0.1, 2);
+    float4 m1 = dMengerDouble(p / _MengerUniformScale1, _MengerOffset1, _MengerScale1, _MengerIteration1, 0.1, 2);
     m1.x *= _MengerUniformScale1;
 
     opUnion(m0, m1);
+    m0.z = p.y;
+    m0.w = p.z;
 
     #if _INVERSION4D_ON
         float e = length(p);
@@ -315,10 +317,8 @@ RT_CALLABLE_PROGRAM void materialAnimation_Nop(MaterialParameter& mat, State& st
 
 RT_CALLABLE_PROGRAM void materialAnimation_Raymarching(MaterialParameter& mat, State& state)
 {
-    // float edge = calcEdge(p, 0.02);
-
     float3 p = state.hitpoint;
-    float2 m = map_id(p);
+    float4 m = map_id(p);
     uint id = uint(m.y);
 
     if (id == 0)
@@ -333,12 +333,18 @@ RT_CALLABLE_PROGRAM void materialAnimation_Raymarching(MaterialParameter& mat, S
     else if (id == 2)
     {
         mat.albedo = make_float3(0.2, 0.2, 0.9);
-        mat.roughness = 0.8;
-        mat.metallic = 0.01;
+        mat.roughness = 0.005;
+        mat.metallic = 0.5;
+        float edge = calcEdge(p, 0.02);
+        float a = (mod(time, 4) < 2.0) ? saturate(sin((m.w * 2 - time * 2) * TAU)) : 0;
+        mat.emission += edge * make_float3(0.2, 0.2, 20) * a;
     }
     else if (id == 3)
     {
-        mat.emission += make_float3(0.2, 0.2, 20);
+        bool flag = (mod(time, 4) > 2);
+        if (time < 5) flag = !flag;
+        float a = flag ? saturate(sin((m.w * 2 - time * 2) * TAU)) : saturate(sin(TAU * time * 10));
+        mat.emission += make_float3(0.2, 0.2, 20) * a;
         mat.albedo = make_float3(0.5, 0.7, 0.7);
     }
 }
