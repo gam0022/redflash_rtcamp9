@@ -235,7 +235,7 @@ float4 map_id(float3 pos)
     #endif
 
     float _MengerUniformScale0 = 1;
-    float3 _MengerOffset0 = make_float3(0.82, 1.17, 0.46);
+    float3 _MengerOffset0 = make_float3(0.85, 1.17, 0.46);
     float _MengerScale0 = 2.37;
     float _MengerIteration0 = 4;
 
@@ -336,7 +336,7 @@ RT_CALLABLE_PROGRAM void materialAnimation_Raymarching(MaterialParameter& mat, S
         mat.roughness = 0.005;
         mat.metallic = 0.5;
         float edge = calcEdge(p, 0.02);
-        float a = (mod(time, 4) < 2.0) ? saturate(sin((m.w * 2 - time * 2) * TAU)) : 0;
+        float a = (mod(time, 10) < 5.5) ? saturate(sin((m.w * 2 - time * 2) * TAU)) : 0;
         mat.emission += edge * make_float3(0.2, 0.2, 20) * a;
     }
     else if (id == 3)
