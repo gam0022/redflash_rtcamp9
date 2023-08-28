@@ -323,12 +323,12 @@ RT_CALLABLE_PROGRAM void materialAnimation_Raymarching(MaterialParameter& mat, S
 
     if (id == 0)
     {
-
+        mat.albedo = make_float3(0.8, 0.8, 0.8);
+        mat.roughness = 0.05;
     }
     else if (id == 1)
     {
-        // mat.emission += make_float3(0.2, 0.2, 20);
-        mat.albedo = make_float3(0.9, 0.1, 0.1);
+        mat.albedo = make_float3(0.9, 0.02, 0.02);
     }
     else if (id == 2)
     {
@@ -345,7 +345,9 @@ RT_CALLABLE_PROGRAM void materialAnimation_Raymarching(MaterialParameter& mat, S
         if (time < 5) flag = !flag;
         float a = flag ? saturate(sin((m.w * 2 - time * 2) * TAU)) : saturate(sin(TAU * time * 10));
         mat.emission += make_float3(0.2, 0.2, 20) * a;
-        mat.albedo = make_float3(0.5, 0.7, 0.7);
+        mat.roughness = 0.001;
+        mat.metallic = 0.1;
+        mat.albedo = make_float3(0.01, 0.01, 0.05);
     }
 }
 
