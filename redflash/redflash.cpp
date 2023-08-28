@@ -119,7 +119,7 @@ Buffer emptyBuffer;
 Buffer trainingDataBuffer;
 
 // Rendering
-float tonemap_exposure = 2.5f;
+float tonemap_exposure = 3.0f;
 
 // PostprocessingのTonemapを有効にするかどうか
 bool use_post_tonemap = false;
@@ -451,7 +451,7 @@ void createContext()
     context->setStackSize(1800);
     context->setMaxTraceDepth(2);
 
-    context["scene_epsilon"]->setFloat(0.0001f);
+    context["scene_epsilon"]->setFloat(0.0003f);
     context["raymarching_iteration"]->setUint(300);
     context["useLight"]->setUint(useLight ? 1 : 0);
     // context["rr_begin_depth"]->setUint( rr_begin_depth );
@@ -1951,10 +1951,10 @@ int main(int argc, char** argv)
                     // 1回目の結果から、時間切れしない sample_per_launch を決定する
                     if (i == 1)
                     {
-                        // 初回launchは時間がかかるため、テストの描画時間を半分に補正する
+                        // 初回launchは時間がかかるため、テストの描画時間を40%に補正する
                         if (frame == frame_start)
                         {
-                            delta_time *= 0.5;
+                            delta_time *= 0.4;
                         }
 
                         int new_sample_per_launch = (int)(remain_time / delta_time * sample_per_launch);
