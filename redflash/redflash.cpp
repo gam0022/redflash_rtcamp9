@@ -119,7 +119,7 @@ Buffer emptyBuffer;
 Buffer trainingDataBuffer;
 
 // Rendering
-float tonemap_exposure = 3.0f;
+float tonemap_exposure = 2.5f;
 
 // PostprocessingのTonemapを有効にするかどうか
 bool use_post_tonemap = false;
@@ -869,7 +869,7 @@ void updateFrame(float time)
     if (update_camera)
     {
         camera_up = make_float3(0.0f, 1.0f, 0.0f);
-        camera_fov = lerp(70.0f, 60.0f, 0.5 + 0.5 * cos(TAU * time / 5));
+        camera_fov = lerp(70.0f, 68.0f, 0.5 + 0.5 * cos(TAU * time / 5));
 
         camera_eye = make_float3(3.5f, 0.5f, 8.0f) * 0.4 + eye_shake;
         camera_lookat = make_float3(0.0f, 0.0f, 0.0f) + target_shake;
