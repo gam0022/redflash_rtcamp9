@@ -473,7 +473,7 @@ RT_PROGRAM void envmap_miss()
     // float intensity = time < 5 ? 1 : 0.2;
     // float intensity = 1;
     float s = 0.5 + 0.5 * sin(time * TAU / 10);
-    float intensity = lerp(0.05, 1.0, s);
+    float intensity = lerp(0.03, 1.0, s);
     current_prd.radiance += make_float3(tex2D(envmap, u, v)) * current_prd.attenuation * intensity;
 
     current_prd.albedo = make_float3(0.0f);

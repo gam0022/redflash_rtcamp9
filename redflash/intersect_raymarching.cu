@@ -335,9 +335,9 @@ RT_CALLABLE_PROGRAM void materialAnimation_Raymarching(MaterialParameter& mat, S
         mat.albedo = make_float3(0.2, 0.2, 0.9);
         mat.roughness = 0.005;
         mat.metallic = 0.5;
-        float edge = calcEdge(p, 0.01);
-        float a = (mod(time, 10) < 5.5) ? saturate(sin((m.w * 2 - time * 2) * TAU)) : 0;
-        mat.emission += pow(edge, 1.0f) * make_float3(0.1, 0.1, 5) * a;
+        float edge = calcEdge(p, 0.02);
+        float a = (mod(time, 4) < 2.0) ? saturate(sin((m.w * 2 - time * 2) * TAU)) : 0;
+        mat.emission += edge * make_float3(0.2, 0.2, 20) * a;
         mat.clearcoat = 0.9;
         mat.subsurface = 0.9;
     }
