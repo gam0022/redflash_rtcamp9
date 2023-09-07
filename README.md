@@ -1,10 +1,10 @@
-# Redflash (Revolution) Renderer
+# Redflash [4D] Renderer
 
 ![pr33_v6_t3000_s1030_1920x1080](https://user-images.githubusercontent.com/759115/64941257-1549c080-d8a1-11e9-9cc6-a145bdaed7d8.png)
 
-Redflash is a physics-based GPU renderer based on Path Tracing implemented in NVIDIA® OptiX 6.0, which can consistently draw scenes with mixed Polygons and **Raymarching**.
+Redflash is a physics-based GPU renderer based on Path Tracing implemented in NVIDIA® OptiX 6.5, which can consistently draw scenes with mixed Polygons and **Raymarching**.
 
-Redflash は NVIDIA® OptiX 6.0 上で実装したパストレーシングによる物理ベースのGPUレンダラーで、ポリゴンと **レイマーチング** が混在したシーンを一貫して描画できます。
+Redflash は NVIDIA® OptiX 6.5 上で実装したパストレーシングによる物理ベースのGPUレンダラーで、ポリゴンと **レイマーチング** が混在したシーンを一貫して描画できます。
 
 ## Note
 
@@ -21,7 +21,9 @@ The actual implementation is in the [redflash](https://github.com/gam0022/redfla
 - Unidirectional Path Tracing
   - Next Event Estimation (Direct Light Sampling)
   - Multiple Importance Sampling
-- Disney BRDF
+- Materials
+  - Disney BRDF
+  - Lambert Diffuse
 - Primitives
   - Sphere
   - Mesh
@@ -33,7 +35,9 @@ The actual implementation is in the [redflash](https://github.com/gam0022/redfla
 
 - Operation confirmed
   - Windows 10 + NVIDIA RTX 2070
+  - Windows 11 + NVIDIA RTX 3080
   - Windows Server 2016 Base + NVIDIA Tesla V100 GPUs
+  - Windows_Server-2022-English-Full-Base + g4dn.xlarge
 - Dependences
   - CUDA 10.1
   - OptiX 6.0.0
@@ -41,6 +45,17 @@ The actual implementation is in the [redflash](https://github.com/gam0022/redfla
   - freeglut
 
 ## Gallery
+
+### RaytracingCamp9 Submission Version / レイトレ合宿9 提出バージョン
+
+Won 4th prize at [レイトレ合宿9](https://sites.google.com/view/rtcamp9).
+
+- [YouTube](https://www.youtube.com/watch?v=ohbv8_jCQtc)
+- [YouTube Short](https://www.youtube.com/shorts/SgPbXt50Jw0)
+- [Google Slides](https://docs.google.com/presentation/d/1f05HU58XD2w_71CJOdiEqOsBI8L2TYRTMndNT9MPqpI/edit#slide=id.gbd0ef54b81_0_79)
+- [Speaker Deck](https://speakerdeck.com/gam0022/rtcamp9)
+
+![218](https://github.com/gam0022/redflash_rtcamp9/assets/759115/03405c4b-de2b-4749-8105-18831f878ba0)
 
 ### RaytracingCamp8 Submission Version / レイトレ合宿8 提出バージョン
 
