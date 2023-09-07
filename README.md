@@ -40,8 +40,8 @@ The actual implementation is in the [redflash](https://github.com/gam0022/redfla
   - Windows_Server-2022-English-Full-Base + g4dn.xlarge
 - Dependences
   - CUDA 10.1
-  - OptiX 6.0.0
-  - Cmake 3.8.2
+  - OptiX 6.5.0
+  - Cmake 3.24.0-rc5
   - freeglut
 
 ## Gallery
