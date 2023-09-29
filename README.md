@@ -12,9 +12,9 @@ This is implemented based on optixPathTracer of NVIDIA official OptiX-Samples.
 
 これは、NVIDIA 公式の OptiX-Samples の optixPathTracer をベースにして実装されています。
 
-The actual implementation is in the [redflash](https://github.com/gam0022/redflash/tree/master/redflash) directory.
+The actual implementation is in the [redflash](https://github.com/gam0022/redflash_rtcamp9/tree/master/redflash) directory.
 
-実際の実装は [redflash](https://github.com/gam0022/redflash/tree/master/redflash) ディレクトリ内にあります。
+実際の実装は [redflash]([https://github.com/gam0022/redflash/tree/master/redflash](https://github.com/gam0022/redflash_rtcamp9/tree/main/redflash)) ディレクトリ内にあります。
 
 ## Features
 
